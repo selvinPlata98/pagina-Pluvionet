@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pluviómetro Avanzado</title>
+    <style>
+        body {
+            font-family: 'Merriweather', serif; /* Fuente con serifa elegante */
+            background-color: #1a1a1a; /* Fondo oscuro */
+            color: #d4d4d4; /* Texto gris claro */
+            margin: 0;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('gothic_pattern.png'); /* Patrón gótico sutil de fondo */
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        h1 {
+            color: #c0c0c0; /* Gris plateado para el título */
+            font-size: 4em;
+            margin-bottom: 50px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px #000000;
+            font-family: 'Playfair Display', serif; /* Fuente elegante para el título */
+            font-weight: bold;
+            font-style: italic;
+        }
+        .navbar {
+            display: flex;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5); /* Barra semi-transparente */
+            padding: 20px 40px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid #333;
+        }
+        .navbar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        .navbar ul li {
+            margin: 0 30px;
+        }
+        .navbar ul li a {
+            text-decoration: none;
+            color: #d4d4d4;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        .navbar ul li a:hover, .navbar ul li.active a {
+            color: #f0f0f0;
+            text-shadow: 1px 1px 2px #000;
+        }
+        .navbar ul li.active a {
+            font-weight: bold;
+        }
+        .container {
+            max-width: 900px; /* Ajustar ancho máximo */
+            width: 95%;
+            background-color: rgba(0, 0, 0, 0.7); /* Contenedor semi-transparente */
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centrar el contenido dentro del contenedor */
+        }
+        h3 {
+            color: #c0c0c0;
+            font-size: 1.8em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px #000;
+            font-family: 'Merriweather', serif;
+            font-weight: bold;
+        }
+        iframe {
+            border: 2px solid #555;
+            border-radius: 8px;
+            margin: 15px;
+            width: 90%; /* Hacer los iframes más responsivos dentro del contenedor */
+            max-width: 600px; /* Ancho máximo para los iframes */
+            height: 280px; /* Altura consistente */
+            box-sizing: border-box;
+            background-color: #333; /* Fondo oscuro para los iframes */
+        }
+        .stats {
+            margin-top: 30px;
+            font-size: 1.1em;
+            color: #d4d4d4;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3em;
+                margin-bottom: 40px;
+            }
+            .navbar {
+                flex-direction: column;
+                align-items: center;
+                padding: 15px;
+            }
+            .navbar ul {
+                flex-direction: column;
+                width: 100%;
+            }
+            .navbar ul li {
+                margin: 10px 0;
+            }
+            .container {
+                padding: 30px;
+                margin-bottom: 30px;
+            }
+            h3 {
+                font-size: 1.5em;
+            }
+            iframe {
+                height: 220px;
+            }
+            .stats {
+                font-size: 1em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+       
+        <ul>
+            <li class="active" onclick="setActive(this)"><a href="pluv_tab.html">Inicio</a></li>
+            <li onclick="setActive(this)"><a href="index.html">Estadísticas</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1>Pluviómetro Avanzado en Tiempo Real</h1>
+        <p style="color: #d4d4d4; font-size: 1.1em; text-shadow: 1px 1px 2px #000;">Datos detallados del nivel de agua</p>
+
+        <h3>Nivel en milímetros (mm)</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <h3>Nivel en centímetros (cm)</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/2?bgcolor=%23ffffff&color=%230066cc&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <h3>Estado del recipiente (0=Vacío, 1=Parcial, 2=Lleno)</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/3?bgcolor=%23ffffff&color=%23ff9900&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <h3>Promedio en cm</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/4?bgcolor=%23ffffff&color=%23009900&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <h3>Máximo en cm</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/5?bgcolor=%23ffffff&color=%23cc00cc&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <h3>Mínimo en cm</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/6?bgcolor=%23ffffff&color=%2300cccc&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <h3>Tiempo desde inicio (horas)</h3>
+        <iframe 
+            src="https://thingspeak.com/channels/2899895/charts/7?bgcolor=%23ffffff&color=%23663300&dynamic=true&results=60&type=line&update=15">
+        </iframe>
+
+        <div class="stats">
+            <p>Datos actualizados cada 15 segundos</p>
+        </div>
+    </div>
+    <script>
+        function setActive(element) {
+            document.querySelectorAll('.navbar ul li').forEach(li => li.classList.remove('active'));
+            element.classList.add('active');
+        }
+    </script>
+</body>
+</html>
