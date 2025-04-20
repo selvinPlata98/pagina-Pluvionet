@@ -10,7 +10,7 @@
             background-color: #1a1a1a; /* Fondo oscuro */
             color: #d4d4d4; /* Texto gris claro */
             margin: 0;
-            padding: 50px;
+            /*padding: 20px;*/
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -18,6 +18,8 @@
             background-image: url('gothic_pattern.png'); /* Patrón gótico sutil de fondo */
             background-size: cover;
             background-attachment: fixed;
+            overflow-x: hidden; /* Evitar scroll horizontal por la lluvia */
+            position: relative; /* Para posicionar la lluvia correctamente */
         }
         h1 {
             color: #c0c0c0; /* Gris plateado para el título */
@@ -31,14 +33,23 @@
             font-style: italic;
         }
         .navbar {
+            width: 100%; /* El navbar ocupa todo el ancho */
+            box-sizing: border-box; /* Incluir padding y border en el ancho */
             display: flex;
-            justify-content: center;
+            align-items: center; /* Alinea verticalmente los elementos */
+            justify-content: space-between; /* Espacio entre el h2 y la ul */
             background-color: rgba(0, 0, 0, 0.5); /* Barra semi-transparente */
             padding: 20px 40px;
             border-radius: 10px;
             margin-bottom: 40px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             border: 1px solid #333;
+        }
+        .navbar h2 {
+            color: #d4d4d4;
+            font-size: 1.5em;
+            margin: 0; /* Elimina el margen por defecto del h2 */
+            text-shadow: 1px 1px 2px #000;
         }
         .navbar ul {
             list-style: none;
@@ -68,7 +79,7 @@
             background-color: rgba(0, 0, 0, 0.7); /* Contenedor semi-transparente */
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-            padding: 40px;
+            padding: 90px;
             margin-bottom: 40px;
             border: 1px solid #333;
         }
@@ -131,6 +142,73 @@
             text-shadow: 1px 1px 2px #000;
         }
 
+        /* Animación de lluvia mejorada */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1; /* Asegurar que la lluvia esté detrás del contenido */
+            overflow: hidden;
+        }
+
+        .drop {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.8));
+            animation: rain linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes rain {
+            0% {
+                transform: translateY(-100vh) translateX(-5px) rotate(15deg);
+                opacity: 0;
+                height: 15px;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            20% {
+                height: 25px;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) translateX(5px) rotate(15deg);
+                opacity: 0;
+                height: 10px;
+            }
+        }
+
+        /* Efecto de impacto de gotas */
+        .splash {
+            position: absolute;
+            width: 15px;
+            height: 10px;
+            background: rgba(174, 194, 224, 0.3);
+            border-radius: 50%;
+            animation: splash 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes splash {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
         /* Media Queries para Responsividad */
         @media (max-width: 768px) {
             h1 {
@@ -171,14 +249,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     </head>
 <body>
+    <div class="rain" id="rain"></div>
+
     <nav class="navbar">
+        <h2>Pluvionet</h2>
         <ul>
             <li class="active" onclick="setActive(this)"><a href="pluv_tab.html">Inicio</a></li>
             <li onclick="setActive(this)"><a href="index.html">Estadísticas</a></li>
         </ul>
     </nav>
-    <h1>Datos del Pluviómetro en Tiempo Real</h1>
+
     <div class="container">
+        <h1>Datos del Pluviómetro en Tiempo Real</h1>
         <table>
             <thead>
                 <tr>
@@ -271,6 +353,61 @@
             document.querySelectorAll('.navbar ul li').forEach(li => li.classList.remove('active'));
             element.classList.add('active');
         }
+
+        // Crear animación de lluvia mejorada
+        function createRain() {
+            const rainContainer = document.getElementById('rain');
+            const dropCount = 150; // Más gotas para efecto más denso
+
+            // Limpiar gotas existentes
+            rainContainer.innerHTML = '';
+
+            for (let i = 0; i < dropCount; i++) {
+                // Crear gota de lluvia
+                const drop = document.createElement('div');
+                drop.classList.add('drop');
+
+                // Posición aleatoria
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 2;
+                const duration = 0.5 + Math.random();
+                const size = 15 + Math.random() * 25;
+
+                // Estilo de la gota
+                drop.style.left = `${posX}vw`;
+                drop.style.animationDelay = `${delay}s`;
+                drop.style.animationDuration = `${duration}s`;
+                drop.style.height = `${size}px`;
+                drop.style.width = `${size/20}px`;
+                drop.style.top = `${Math.random() * -100}vh`; // Empezar desde arriba
+
+                // Añadir gota al contenedor
+                rainContainer.appendChild(drop);
+
+                // Crear efecto splash (opcional)
+                if (Math.random() > 0.7) {
+                    setTimeout(() => {
+                        const splash = document.createElement('div');
+                        splash.classList.add('splash');
+                        splash.style.left = `${posX}vw`;
+                        splash.style.bottom = '0';
+                        splash.style.animationDelay = `${delay + duration * 0.8}s`;
+                        rainContainer.appendChild(splash);
+
+                        // Eliminar splash después de la animación
+                        setTimeout(() => {
+                            splash.remove();
+                        }, 400);
+                    }, delay * 1000 + duration * 800); // Ajustar tiempo del splash
+                }
+            }
+
+            // Volver a generar lluvia periódicamente para evitar acumulación
+            setTimeout(createRain, 3000);
+        }
+
+        window.addEventListener('load', createRain);
+        window.addEventListener('resize', createRain); // Recrear al cambiar tamaño
     </script>
 </body>
 </html>

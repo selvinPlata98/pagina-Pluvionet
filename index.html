@@ -6,66 +6,163 @@
     <title>Pluviómetro Avanzado</title>
     <style>
         body {
-            font-family: 'Merriweather', serif; /* Fuente con serifa elegante */
-            background-color: #1a1a1a; /* Fondo oscuro */
-            color: #d4d4d4; /* Texto gris claro */
+            font-family: 'Merriweather', serif;
+            background-color: #1a1a1a;
+            color: #d4d4d4;
             margin: 0;
-            padding: 50px;
+
+            min-height: 100vh;
+            background-image: url('gothic_pattern.png');
+            background-size: cover;
+            background-attachment: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
-            background-image: url('gothic_pattern.png'); /* Patrón gótico sutil de fondo */
-            background-size: cover;
-            background-attachment: fixed;
+            justify-content: center;
+            overflow-x: hidden;
         }
+
+        /* Animación de lluvia mejorada */
+        .rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .drop {
+            position: absolute;
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, rgba(174, 194, 224, 0.8));
+            animation: rain linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes rain {
+            0% {
+                transform: translateY(-100vh) translateX(-5px) rotate(15deg);
+                opacity: 0;
+                height: 15px;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            20% {
+                height: 25px;
+            }
+            80% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh) translateX(5px) rotate(15deg);
+                opacity: 0;
+                height: 10px;
+            }
+        }
+
+        /* Efecto de impacto de gotas */
+        .splash {
+            position: absolute;
+            width: 15px;
+            height: 10px;
+            background: rgba(174, 194, 224, 0.3);
+            border-radius: 50%;
+            animation: splash 0.4s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes splash {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .main-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+           /* padding: 20px;*/
+            box-sizing: border-box;
+        }
+
         h1 {
-            color: #c0c0c0; /* Gris plateado para el título */
+            color: #c0c0c0;
             font-size: 4em;
             margin-bottom: 50px;
             text-align: center;
             letter-spacing: 2px;
             text-shadow: 2px 2px 4px #000000;
-            font-family: 'Playfair Display', serif; /* Fuente elegante para el título */
+            font-family: 'Playfair Display', serif;
             font-weight: bold;
             font-style: italic;
         }
+
         .navbar {
+            width: 100%; /* El navbar ocupa todo el ancho */
+            box-sizing: border-box; /* Incluir padding y border en el ancho */
             display: flex;
-            justify-content: center;
-            background-color: rgba(0, 0, 0, 0.5); /* Barra semi-transparente */
+            align-items: center; /* Alinea verticalmente los elementos */
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 20px 40px;
             border-radius: 10px;
             margin-bottom: 40px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             border: 1px solid #333;
+            justify-content: space-between; /* Espacio entre h2 y ul */
         }
+
+        .navbar h2 {
+            color: #d4d4d4;
+            font-size: 1.5em;
+            margin: 0; /* Elimina el margen por defecto del h2 */
+            text-shadow: 1px 1px 2px #000;
+        }
+
         .navbar ul {
             list-style: none;
             padding: 0;
             margin: 0;
             display: flex;
+            /* justify-content: center; Ya no es necesario aquí */
         }
+
         .navbar ul li {
             margin: 0 30px;
         }
+
         .navbar ul li a {
             text-decoration: none;
             color: #d4d4d4;
             font-size: 1.2em;
             transition: color 0.3s ease;
         }
+
         .navbar ul li a:hover, .navbar ul li.active a {
             color: #f0f0f0;
             text-shadow: 1px 1px 2px #000;
         }
+
         .navbar ul li.active a {
             font-weight: bold;
         }
+
         .container {
-            max-width: 900px; /* Ajustar ancho máximo */
+            max-width: 900px;
             width: 95%;
-            background-color: rgba(0, 0, 0, 0.7); /* Contenedor semi-transparente */
+            background-color: rgba(0, 0, 0, 0.7);
             border-radius: 15px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
             padding: 40px;
@@ -73,8 +170,9 @@
             border: 1px solid #333;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Centrar el contenido dentro del contenedor */
+            align-items: center;
         }
+
         h3 {
             color: #c0c0c0;
             font-size: 1.8em;
@@ -84,16 +182,18 @@
             font-family: 'Merriweather', serif;
             font-weight: bold;
         }
+
         iframe {
             border: 2px solid #555;
             border-radius: 8px;
             margin: 15px;
-            width: 90%; /* Hacer los iframes más responsivos dentro del contenedor */
-            max-width: 600px; /* Ancho máximo para los iframes */
-            height: 280px; /* Altura consistente */
+            width: 90%;
+            max-width: 600px;
+            height: 280px;
             box-sizing: border-box;
-            background-color: #333; /* Fondo oscuro para los iframes */
+            background-color: #333;
         }
+
         .stats {
             margin-top: 30px;
             font-size: 1.1em;
@@ -101,34 +201,48 @@
             text-shadow: 1px 1px 2px #000;
         }
 
-        /* Media Queries para Responsividad */
         @media (max-width: 768px) {
             h1 {
                 font-size: 3em;
                 margin-bottom: 40px;
             }
+
             .navbar {
                 flex-direction: column;
-                align-items: center;
+                align-items: center; /* Centra los elementos en pantallas pequeñas */
                 padding: 15px;
             }
+
+            .navbar h2 {
+                margin-bottom: 10px; /* Añade espacio debajo del título en pantallas pequeñas */
+                margin-right: 0; /* Elimina el margen derecho en pantallas pequeñas */
+                text-align: center; /* Centra el título en pantallas pequeñas */
+            }
+
             .navbar ul {
-                flex-direction: column;
-                width: 100%;
+                flex-direction: row; /* Vuelve a la disposición horizontal */
+                width: auto; /* Ajusta el ancho al contenido */
+                justify-content: center; /* Centra los elementos de la lista */
+                margin-top: 10px; /* Añade espacio encima de la lista en pantallas pequeñas */
             }
+
             .navbar ul li {
-                margin: 10px 0;
+                margin: 0 15px; /* Reduce el margen entre los elementos de la lista */
             }
+
             .container {
                 padding: 30px;
                 margin-bottom: 30px;
             }
+
             h3 {
                 font-size: 1.5em;
             }
+
             iframe {
                 height: 220px;
             }
+
             .stats {
                 font-size: 1em;
             }
@@ -138,61 +252,107 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="navbar">
-       
-        <ul>
-            <li class="active" onclick="setActive(this)"><a href="pluv_tab.html">Inicio</a></li>
-            <li onclick="setActive(this)"><a href="index.html">Estadísticas</a></li>
-        </ul>
-    </nav>
-    <div class="container">
-        <h1>Pluviómetro Avanzado en Tiempo Real</h1>
-        <p style="color: #d4d4d4; font-size: 1.1em; text-shadow: 1px 1px 2px #000;">Datos detallados del nivel de agua</p>
+    <div class="rain" id="rain"></div>
 
-        <h3>Nivel en milímetros (mm)</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+    <div class="main-content">
+        <nav class="navbar">
+            <h2>Pluvionet</h2>
+            <ul>
+                <li class="active" onclick="setActive(this)"><a href="pluv_tab.html">Inicio</a></li>
+                <li onclick="setActive(this)"><a href="index.html">Estadísticas</a></li>
+            </ul>
+        </nav>
 
-        <h3>Nivel en centímetros (cm)</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/2?bgcolor=%23ffffff&color=%230066cc&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+        <div class="container">
+            <h1>Pluviómetro Avanzado en Tiempo Real</h1>
+            <p style="color: #d4d4d4; font-size: 1.1em; text-shadow: 1px 1px 2px #000;">Datos detallados del nivel de agua</p>
 
-        <h3>Estado del recipiente (0=Vacío, 1=Parcial, 2=Lleno)</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/3?bgcolor=%23ffffff&color=%23ff9900&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+            <h3>Nivel en milímetros (mm)</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15"></iframe>
 
-        <h3>Promedio en cm</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/4?bgcolor=%23ffffff&color=%23009900&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+            <h3>Nivel en centímetros (cm)</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/2?bgcolor=%23ffffff&color=%230066cc&dynamic=true&results=60&type=line&update=15"></iframe>
 
-        <h3>Máximo en cm</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/5?bgcolor=%23ffffff&color=%23cc00cc&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+            <h3>Estado del recipiente (0=Vacío, 1=Parcial, 2=Lleno)</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/3?bgcolor=%23ffffff&color=%23ff9900&dynamic=true&results=60&type=line&update=15"></iframe>
 
-        <h3>Mínimo en cm</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/6?bgcolor=%23ffffff&color=%2300cccc&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+            <h3>Promedio en cm</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/4?bgcolor=%23ffffff&color=%23009900&dynamic=true&results=60&type=line&update=15"></iframe>
 
-        <h3>Tiempo desde inicio (horas)</h3>
-        <iframe 
-            src="https://thingspeak.com/channels/2899895/charts/7?bgcolor=%23ffffff&color=%23663300&dynamic=true&results=60&type=line&update=15">
-        </iframe>
+            <h3>Máximo en cm</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/5?bgcolor=%23ffffff&color=%23cc00cc&dynamic=true&results=60&type=line&update=15"></iframe>
 
-        <div class="stats">
-            <p>Datos actualizados cada 15 segundos</p>
+            <h3>Mínimo en cm</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/6?bgcolor=%23ffffff&color=%2300cccc&dynamic=true&results=60&type=line&update=15"></iframe>
+
+            <h3>Tiempo desde inicio (horas)</h3>
+            <iframe src="https://thingspeak.com/channels/2899895/charts/7?bgcolor=%23ffffff&color=%23663300&dynamic=true&results=60&type=line&update=15"></iframe>
+
+            <div class="stats">
+                <p>Datos actualizados cada 15 segundos</p>
+            </div>
         </div>
     </div>
+
     <script>
         function setActive(element) {
             document.querySelectorAll('.navbar ul li').forEach(li => li.classList.remove('active'));
             element.classList.add('active');
         }
+
+        // Crear animación de lluvia mejorada
+        function createRain() {
+            const rainContainer = document.getElementById('rain');
+            const dropCount = 150; // Más gotas para efecto más denso
+
+            // Limpiar gotas existentes
+            rainContainer.innerHTML = '';
+
+            for (let i = 0; i < dropCount; i++) {
+                // Crear gota de lluvia
+                const drop = document.createElement('div');
+                drop.classList.add('drop');
+
+                // Posición aleatoria
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 2;
+                const duration = 0.5 + Math.random();
+                const size = 15 + Math.random() * 25;
+
+                // Estilo de la gota
+                drop.style.left = `${posX}vw`;
+                drop.style.animationDelay = `${delay}s`;
+                drop.style.animationDuration = `${duration}s`;
+                drop.style.height = `${size}px`;
+                drop.style.width = `${size/20}px`;
+
+                // Añadir gota al contenedor
+                rainContainer.appendChild(drop);
+
+                // Crear efecto splash (opcional)
+                if (Math.random() > 0.7) {
+                    setTimeout(() => {
+                        const splash = document.createElement('div');
+                        splash.classList.add('splash');
+                        splash.style.left = `${posX}vw`;
+                        splash.style.bottom = '0';
+                        splash.style.animationDelay = `${delay + duration * 0.8}s`;
+                        rainContainer.appendChild(splash);
+
+                        // Eliminar splash después de la animación
+                        setTimeout(() => {
+                            splash.remove();
+                        }, 400);
+                    }, delay * 1000);
+                }
+            }
+
+            // Volver a generar lluvia periódicamente para evitar acumulación
+            setTimeout(createRain, 3000);
+        }
+
+        window.addEventListener('load', createRain);
+        window.addEventListener('resize', createRain); // Recrear al cambiar tamaño
     </script>
 </body>
 </html>
